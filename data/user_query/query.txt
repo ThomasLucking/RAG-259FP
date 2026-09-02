@@ -1,1 +1,0 @@
-I would like to know how to practice test-drive-development
