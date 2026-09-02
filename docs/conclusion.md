@@ -1,57 +1,55 @@
-# Original concept
-Basically what I wanted to do, is to integrate a local LLM which fetches data on the server side, like the documents currently present
-which shows a bunch of coding concepts databases, coding practices etc.. I wanted to do this with a backend of python and a react frontend
-using tanstack query to call the api that I made using fastapi. 
+# Concept original
 
-# first step
-first I looked up on what are the main steps to implement rag for very simple stuff especially with local LLMS, which was basically
-chunking -> embedding -> storing the data inside a vector db -> retrieval, which is the same thing with the user query but instead of
-storing the query, I just embed it then query the vector db with the user query to get the closest ones.
+En gros, ce que je voulais faire, c'est intégrer un LLM local qui va chercher des données côté serveur, comme les documents actuellement présents qui montrent plusieurs concepts de programmation, bases de données, bonnes pratiques de code, etc. Je voulais faire ça avec un backend en Python et un frontend en React utilisant TanStack Query pour appeler l'API que j'ai créée avec FastAPI.
 
-to implement this, I first created `data_chunking.py` which basically grabs the data from `/data` and I had to first parse it correctly before embedding it, so the first thing I did was chunk the headers first of each markdown file, then I split the content of the markdown files.
+# Première étape
 
-I had to do this so I can keep the sections seperate, and it'll be easier to embed since the amount of content will be smaller.
-To achieve this I had to use langchain TextSplitter, which in turn I ended up with chunks now.
+D'abord, j'ai regardé quelles sont les principales étapes pour implémenter un RAG pour des choses très simples, notamment avec des LLMs locaux, ce qui se résumait en gros à : chunking -> embedding -> stockage des données dans une base de données vectorielle -> retrieval, ce qui est la même chose pour la requête de l'utilisateur, sauf qu'au lieu de stocker la requête, je l'embed simplement, puis j'interroge la base de données vectorielle avec la requête de l'utilisateur pour récupérer les plus proches.
 
-# second step
-the second step was using those chunks and embed them using a embedding mode, I originally planned to use quen3-embedding 4b, but I ran into problems since when I was chunking large amounts of data, it took too long and drained too much power from my computer. so I decided to use 
-`nomic-embed-text` which was rougly 30x smaller and a lot faster, after embedding the data I had to store it inside a vector database, so I decided to use chroma db since it's small and I didn't need to spin up postgresSQL for something this small.
+Pour implémenter ça, j'ai d'abord créé `data_chunking.py` qui récupère les données depuis `/data`, et j'ai dû d'abord bien les parser avant de les embed. Donc la première chose que j'ai faite, c'était de chunker les headers de chaque fichier markdown, puis de découper le contenu des fichiers markdown.
 
-# third step.
-now the third step which was generating the user query, originally I planned to do something similiar which was chunk -> embed -> store,
-however since the user query was a simple txt file, I didn't need to parse the header's or anything. and after consulting with claude and online resoucrs I realised that I didn't need to store it inside a vector db, since it's a simple user query i could directly grab the user prompt and embed it. then query it to the vector db.
+J'ai dû faire ça pour pouvoir garder les sections séparées, et ce sera plus facile à embed puisque la quantité de contenu sera plus petite. Pour y arriver, j'ai dû utiliser le TextSplitter de LangChain, ce qui m'a donné des chunks.
 
-# api layer
-now since the backend it's finished, however the code is not modular yet, I had to transform every file into different functions and allowed parameters to come through, I decided to ask claude to do that since I'm lazy.
+# Deuxième étape
 
-after that. I created 3 endpoints
+La deuxième étape était d'utiliser ces chunks et de les embed avec un modèle d'embedding. À la base, je prévoyais d'utiliser qwen3-embedding 4b, mais j'ai rencontré des problèmes puisque, quand je chunkais de grandes quantités de données, ça prenait trop de temps et ça drainait trop de batterie de mon ordinateur. J'ai donc décidé d'utiliser `nomic-embed-text`, qui était environ 30 fois plus petit et beaucoup plus rapide. Après avoir embed les données, j'ai dû les stocker dans une base de données vectorielle, donc j'ai choisi ChromaDB puisqu'elle est petite et que je n'avais pas besoin de faire tourner PostgreSQL pour quelque chose d'aussi simple.
 
-- POST /retrieve returns the top-matching document chunks for a given question, no answer generation.
+# Troisième étape
 
-- POST /query full RAG: retrieves relevant chunks and returns an LLM-generated answer along with the chunks used.
+Maintenant la troisième étape, qui était de générer la requête de l'utilisateur. À la base, je prévoyais de faire un truc similaire, c'est-à-dire chunk -> embed -> store, cependant, comme la requête de l'utilisateur était un simple fichier txt, je n'avais pas besoin de parser les headers ni rien. Et après avoir consulté Claude et des ressources en ligne, j'ai réalisé que je n'avais pas besoin de la stocker dans une base de données vectorielle, puisque c'est une simple requête utilisateur : je pouvais directement récupérer le prompt de l'utilisateur et l'embed. Ensuite, je l'interroge dans la base de données vectorielle.
 
-- GET /documents/{slug} — reassembles and returns the full content of one source markdown file by its slug (all its stored chunks stitched back together).
+# Couche API
 
-# frontend
+Maintenant que le backend est terminé, le code n'est cependant pas encore modulaire. J'ai dû transformer chaque fichier en différentes fonctions et permettre le passage de paramètres. J'ai décidé de demander à Claude de le faire puisque je suis flemmard.
 
-after the backend was done, I decided to ask claude claude directly to create me the user interface, which you can see inside of [here](docs/app.png)
+Après ça, j'ai créé 3 endpoints :
 
-# problems encountered
+- POST /retrieve retourne les chunks de documents les plus pertinents pour une question donnée, sans génération de réponse.
 
-- it's a bit a painful in the beginning since I didn't know that you had to chunk the headers first or the markdown files then chunk the content first, so I ran into a lot of problems where I couldn't chunk the data correctly
+- POST /query RAG complet : récupère les chunks pertinents et retourne une réponse générée par le LLM, ainsi que les chunks utilisés.
 
-- embedding model that is too big, when I tried using a 4b model for the embeddings it took too long, and drained way too much battery.
+- GET /documents/{slug} — reconstitue et retourne le contenu complet d'un fichier markdown source à partir de son slug (tous ses chunks stockés recollés ensemble).
 
-- over-engineered the user-query, I spent around 30-45 minutes trying to implement the same flow with the user query, but I figured out that you just need to embed the raw user query. then query the vectordb to find the macthing vectors 
+# Frontend
 
-# extra features I would like to add.
+Une fois le backend terminé, j'ai décidé de demander directement à Claude de me créer l'interface utilisateur, que vous pouvez voir [ici](app.png).
 
-- a way to add documents dynamiclly instead of a fixed data set
+# Problèmes rencontrés
 
-- the person could possibly choose the model and embedding model they want, especially if they have a better setup, but user friendly so no modifying the code.
+- C'était un peu pénible au début puisque je ne savais pas qu'il fallait d'abord chunker les headers des fichiers markdown avant de chunker le contenu, donc j'ai rencontré beaucoup de problèmes où je n'arrivais pas à chunker les données correctement.
 
-- improve the style of the website, which was a bit basic.
+- Modèle d'embedding trop gros : quand j'ai essayé d'utiliser un modèle de 4b pour les embeddings, ça prenait trop de temps et ça drainait beaucoup trop de batterie.
 
-- able to upload multiple different types of files, since currently the embedding and chunking only worked on markdown files, but I would love to add so it would also work for txt, pdf's docx files.. etc...
+- Sur-ingénierie de la requête utilisateur : j'ai passé environ 30-45 minutes à essayer d'implémenter le même flow avec la requête utilisateur, mais j'ai fini par comprendre qu'il suffisait d'embed la requête brute de l'utilisateur, puis d'interroger la vector db pour trouver les vecteurs correspondants.
 
-- give the local llm internet access so it can search further details into the user query.
+# Fonctionnalités supplémentaires que j'aimerais ajouter
+
+- Un moyen d'ajouter des documents de manière dynamique au lieu d'un dataset fixe.
+
+- La possibilité pour l'utilisateur de choisir le modèle et le modèle d'embedding qu'il veut, surtout s'il a un meilleur setup, mais de façon user-friendly, sans avoir à modifier le code.
+
+- Améliorer le style du site web, qui était un peu basique.
+
+- Pouvoir upload différents types de fichiers, puisqu'actuellement l'embedding et le chunking ne fonctionnent que sur des fichiers markdown, mais j'aimerais aussi que ça fonctionne avec des fichiers txt, pdf, docx, etc.
+
+- Donner un accès internet au LLM local pour qu'il puisse chercher plus de détails sur la requête de l'utilisateur.
