@@ -1,7 +1,7 @@
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from pathlib import Path
 
-HEADERS_TO_SPLIT_ON = [("#", "Header 1"), ("##", "Header 2"), ("###", "Header 3")]
+HEADERS_TO_SPLIT_ON = [("##", "Header 2"), ("###", "Header 3")]
 
 
 def chunk_documents(docs_folder: Path = Path("./data")) -> list:
