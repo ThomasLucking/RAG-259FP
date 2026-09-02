@@ -1,7 +1,11 @@
+from pathlib import Path
+
 from openai import OpenAI, APIConnectionError
 import chromadb
 
-chroma_client = chromadb.PersistentClient(path="./chroma_db")
+CHROMA_DB_PATH = Path(__file__).resolve().parent.parent / "chroma_db"
+
+chroma_client = chromadb.PersistentClient(path=str(CHROMA_DB_PATH))
 collection = chroma_client.get_or_create_collection('docs_collection')
 
 # create the client for ollama and the endpoint to hit
@@ -23,9 +27,10 @@ def user_query(query: str) -> list[str]:
     # retrieve them
     query_embedding = response.data[0].embedding
     # associate the user query with the embeddings inside of the collection for the documents, and get the 5 best answers
+    # if you want for the llm to fetch more answer's increase the n count.
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=5
+        n_results=10
     )
 
     retrieved_chunks = results['documents'][0] if results['documents'] else []

@@ -1,9 +1,11 @@
+from pathlib import Path
+
 from openai import OpenAI, APIConnectionError
 import chromadb
 
 from data_chunking import chunk_documents
 
-CHROMA_PATH = "./chroma_db"
+CHROMA_PATH = str(Path(__file__).resolve().parent.parent / "chroma_db")
 COLLECTION_NAME = "docs_collection"
 
 # create the client so that the endpoint is exposed
