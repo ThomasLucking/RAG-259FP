@@ -27,7 +27,7 @@ export function AppSidebar() {
             <BookOpenIcon className="size-4" />
           </div>
           <div className="flex min-w-0 flex-col">
-            <span className="truncate text-sm font-medium">Knowledge Base</span>
+            <span className="truncate text-sm font-medium">Indexed files</span>
             <span className="truncate text-xs text-muted-foreground">
               {totalDocumentCount} documents indexed
             </span>

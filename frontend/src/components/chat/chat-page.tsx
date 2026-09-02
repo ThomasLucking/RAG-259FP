@@ -30,7 +30,7 @@ export function ChatPage() {
       <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-3">
         <SidebarTrigger />
         <Separator orientation="vertical" className="h-5" />
-        <span className="text-sm font-medium">RAG Assistant</span>
+        <span className="text-sm font-medium">RAG 259FP</span>
       </header>
 
       <MessageScrollerProvider autoScroll>
