@@ -2,10 +2,6 @@
 
 Local Retrieval-Augmented Generation pipeline over a personal document set, using a local LLM via Ollama, Chroma for vector search, a FastAPI backend, and a minimal React frontend.
 
-## Goal
-
-Build a working RAG demo and compare "with retrieval" vs "without retrieval" answers, including an honest analysis of failure modes (chunking artifacts, retrieval misses, hallucination despite context).
-
 ## Stack
 
 - **LLM runtime:** Ollama (local HTTP API)
