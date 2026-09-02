@@ -15,7 +15,11 @@ app.add_middleware(
 )
 
 class QueryRequest(BaseModel):
-    query: str
+    question: str
+
+    @property
+    def query(self) -> str:
+        return self.question
 
 
 class QueryResponse(BaseModel):
