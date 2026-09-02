@@ -41,8 +41,6 @@ cd frontend && bun install && cd ..
 This installs Ollama if missing, pulls the `qwen2.5` and `nomic-embed-text` models, then launches the backend (`uv run main.py`, port 8000) and frontend (`bun run dev`) together. Override the models with the `GEN_MODEL` and `EMBED_MODEL` environment variables.
 
 ## Docs
-
-- [`docs/plan.md`](docs/plan.md) — hour-by-hour build plan
 - [`docs/tech-stack.md`](docs/tech-stack.md) — stack rationale
 
 ## Status
