@@ -10,7 +10,7 @@ Build a working RAG demo and compare "with retrieval" vs "without retrieval" ans
 
 - **LLM runtime:** Ollama (local HTTP API)
 - **Generation model:** `qwen2.5`
-- **Embedding model:** `qwen3-embedding:4b`
+- **Embedding model:** `nomic-embed-text`
 - **Vector store:** Chroma (embedded, in-process)
 - **Backend:** Python, FastAPI
 - **Frontend:** React, TanStack Query
@@ -33,7 +33,7 @@ Requires Python >= 3.14 and [Ollama](https://ollama.com) running locally.
 
 ```bash
 ollama pull qwen2.5
-ollama pull qwen3-embedding:4b
+ollama pull nomic-embed-text
 uv sync
 uv run main.py
 ```
