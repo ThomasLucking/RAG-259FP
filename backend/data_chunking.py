@@ -10,7 +10,7 @@ def chunk_documents(docs_folder: Path = Path("./data")) -> list:
     # the headers decide on what to split on,
     md_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=HEADERS_TO_SPLIT_ON)
     # then we can chunk the rest.
-    char_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    char_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=200)
 
     """
     basically we split the headers first, since we can keep the sections seperate, and
