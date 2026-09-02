@@ -1,4 +1,4 @@
-import { BotIcon, SearchIcon, SparklesIcon } from "lucide-react"
+import { BotIcon, SparklesIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Bubble, BubbleContent } from "@/components/ui/bubble"
@@ -6,8 +6,7 @@ import { Message, MessageAvatar, MessageContent } from "@/components/ui/message"
 import { Spinner } from "@/components/ui/spinner"
 import type { ChatStage } from "@/hooks/use-chat"
 
-const STAGE_COPY: Record<Exclude<ChatStage, "idle">, { icon: typeof SearchIcon; label: string }> = {
-  retrieving: { icon: SearchIcon, label: "Searching the knowledge base…" },
+const STAGE_COPY: Record<Exclude<ChatStage, "idle">, { icon: typeof SparklesIcon; label: string }> = {
   generating: { icon: SparklesIcon, label: "Thinking through an answer…" },
 }
 

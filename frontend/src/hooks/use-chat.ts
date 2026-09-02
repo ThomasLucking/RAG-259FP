@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 
-import { askQuestion, retrieveChunks } from "@/lib/api"
+import { askQuestion } from "@/lib/api"
 
-export type ChatStage = "idle" | "retrieving" | "generating"
+export type ChatStage = "idle" | "generating"
 
 export interface ChatMessage {
   id: string
@@ -23,11 +23,8 @@ export function useChat() {
 
   const mutation = useMutation({
     mutationFn: async (question: string) => {
-      setStage("retrieving")
-      const chunks = await retrieveChunks(question)
-
       setStage("generating")
-      const { answer } = await askQuestion(question)
+      const { answer, chunks } = await askQuestion(question)
 
       return { answer, chunks }
     },
