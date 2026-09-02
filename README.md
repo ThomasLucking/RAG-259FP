@@ -29,14 +29,20 @@ generate(prompt) -> str
 
 ## Setup
 
-Requires Python >= 3.14 and [Ollama](https://ollama.com) running locally.
+Requires Python >= 3.14, [uv](https://docs.astral.sh/uv/), and [Bun](https://bun.sh).
 
 ```bash
-ollama pull qwen2.5
-ollama pull nomic-embed-text
 uv sync
-uv run main.py
+cd frontend && bun install && cd ..
 ```
+
+## Running
+
+```bash
+./scripts/start.sh
+```
+
+This installs Ollama if missing, pulls the `qwen2.5` and `nomic-embed-text` models, then launches the backend (`uv run main.py`, port 8000) and frontend (`bun run dev`) together. Override the models with the `GEN_MODEL` and `EMBED_MODEL` environment variables.
 
 ## Docs
 
@@ -45,4 +51,4 @@ uv run main.py
 
 ## Status
 
-Early scaffolding — pipeline not yet implemented.
+Pipeline implemented and running: ingestion, retrieval, and the `/query` endpoint work end to end.
